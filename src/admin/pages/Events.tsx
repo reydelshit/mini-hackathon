@@ -67,7 +67,7 @@ const Events = () => {
     <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
       <h1 className="my-4 text-2xl font-bold">Students</h1>
 
-      <div className="flex w-full gap-10">
+      <div className="flex w-full flex-col-reverse gap-10 md:flex-row">
         <div className="mt-[1rem] w-full rounded-lg bg-white p-2">
           <div className="my-2 flex w-full items-center justify-between">
             <Input
@@ -157,7 +157,7 @@ const Events = () => {
           </Table>
         </div>
 
-        <div className="bg-primary-bg flex w-[30%] flex-col items-center gap-4">
+        <div className="bg-primary-bg flex w-full flex-col items-center gap-4 md:w-[30%]">
           <Button onClick={() => setShowRegister(true)} className="w-full">
             Register Student
           </Button>
