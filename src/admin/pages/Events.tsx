@@ -28,6 +28,8 @@ import { EventTypes } from '@/types/types';
 import { FiEdit3 } from 'react-icons/fi';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 
+import { Scanner } from '@yudiel/react-qr-scanner';
+
 const Events = () => {
   const [events, setEvents] = useState<EventTypes[]>([]);
   const [seachEventName, setSearchEventName] = useState('');
@@ -35,6 +37,8 @@ const Events = () => {
   const [showUploadWireTransfer, setShowUploadWireTransfer] = useState(false);
   const [generatePaymentLink, setGeneratePaymentLink] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
+
+  const [scanResult, setScanResult] = useState(null) as any;
 
   const handleDelete = (id: number) => {
     axios
@@ -62,6 +66,41 @@ const Events = () => {
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  const handleShowRegister = () => {
+    setShowRegister(true);
+  };
+
+  // const Html5QrcodeScannerWrapper = () => {
+  //   useEffect(() => {
+  //     const scanner = new Html5QrcodeScanner(
+  //       'reader',
+  //       {
+  //         qrbox: {
+  //           width: 250,
+  //           height: 250,
+  //         },
+  //         fps: 5,
+  //         rememberLastUsedCamera: true,
+  //       },
+  //       false,
+  //     );
+
+  //     const success = (data: string) => {
+  //       console.log(data);
+  //       scanner.clear();
+  //       setScanResult(data);
+  //     };
+
+  //     const error = (err: string) => {
+  //       console.warn(err);
+  //     };
+
+  //     scanner.render(success, error);
+  //   }, []);
+
+  //   return null;
+  // };
 
   return (
     <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
@@ -158,7 +197,7 @@ const Events = () => {
         </div>
 
         <div className="bg-primary-bg flex w-full flex-col items-center gap-4 md:w-[30%]">
-          <Button onClick={() => setShowRegister(true)} className="w-full">
+          <Button onClick={handleShowRegister} className="w-full">
             Register Student
           </Button>
 
@@ -178,8 +217,8 @@ const Events = () => {
       </div>
 
       {showRegister && (
-        <div className="bg-primary-bg absolute top-0 flex h-full w-full flex-col items-center justify-center bg-opacity-90">
-          <div className="relative mt-[-10rem] flex h-[40%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
+        <div className="bg-primary-bg absolute top-0 flex h-full w-full flex-col items-center justify-center bg-opacity-90 md:w-full">
+          <div className="relative mt-[-10rem] flex h-[80%] w-full flex-col items-center justify-center rounded-lg border-2 bg-white md:h-[40%] md:w-[50%]">
             <Button
               onClick={() => setShowRegister(false)}
               className="absolute right-5 top-5"
@@ -187,7 +226,19 @@ const Events = () => {
               Close
             </Button>
 
-            <h1 className="my-2 text-lg font-semibold">Register</h1>
+            <Scanner
+              onResult={(text, result) => setScanResult(text, result)}
+              onError={(error) => console.log(error?.message)}
+            />
+
+            {scanResult && (
+              <div className="flex flex-col items-center justify-center">
+                <h1 className="my-2 text-lg font-semibold">Student Details</h1>
+                <div className="my-2 flex flex-col items-center justify-center">
+                  {scanResult}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
