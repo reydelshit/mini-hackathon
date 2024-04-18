@@ -8,6 +8,7 @@ import Dashboard from '../pages/Dashboard';
 import Events from '../pages/Events';
 import NotFound from '../pages/NotFound';
 import Students from '../pages/Student';
+import WireTransfer from '../pages/WireTransfer';
 
 export default function Sidebar() {
   const [width, setWidth] = useState<number>(5);
@@ -119,6 +120,7 @@ export default function Sidebar() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
           <Route path="/events/:id" element={<Events />} />
+          <Route path="/events/:id/check" element={<WireTransfer />} />
 
           <Route path="*" element={<NotFound />} />
           <Route path="/*" element={<NotFound />} />

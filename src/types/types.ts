@@ -27,4 +27,5 @@ export type EventRecordsType = {
   phone_number: string;
   proof_image: string;
   reference_no: string;
+  payment_status: string;
 };

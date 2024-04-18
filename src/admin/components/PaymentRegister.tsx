@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/select';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import { Input } from '@/components/ui/input';
 import {
@@ -37,7 +37,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
   const [studentCode, setStudentCode] = useState('');
   const [paymentAmount, setPaymentAmount] = useState(0);
-  const [eventStatus, setEventStatus] = useState('' as string);
+  const [eventStatus, setEventStatus] = useState('Approved' as string);
   const { toast } = useToast();
 
   const { id } = useParams<{ id: string }>();
@@ -96,6 +96,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
               amount: paymentAmount,
               payment_type: 'cash',
               event_id: id,
+              payment_status: 'Approved',
             })
             .then((res) => {
               if (res.data.status === 'success') {
@@ -221,17 +222,25 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
               placeholder="search Student.."
             />
 
-            <Select value={eventStatus} onValueChange={handleStatus}>
-              <SelectTrigger className="w-[15rem]">
-                <SelectValue placeholder="Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Finished">Finished</SelectItem>
-                <SelectItem value="Ongoing">Ongoing</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Cancelled">Cancelled</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex gap-4">
+              <Button>
+                <Link to={`/admin/events/${id}/check`}>
+                  Check Online Payments
+                </Link>
+              </Button>
+
+              <Select value={eventStatus} onValueChange={handleStatus}>
+                <SelectTrigger className="w-[15rem]">
+                  <SelectValue placeholder="Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All</SelectItem>
+                  <SelectItem value="Approved">Approved</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Rejected">Rejected</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <Table className="w-full">
@@ -258,12 +267,18 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                   Reference No
                 </TableHead>
                 <TableHead className="font-bold text-black">Date</TableHead>
-                <TableHead className="font-bold text-black">Action</TableHead>
+                <TableHead className="font-bold text-black">Status</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {events
-                .filter((eve) => eve.student_code_id.includes(seachEventName))
+                .filter(
+                  (eve) =>
+                    (seachEventName === 'All' ||
+                      eve.student_code_id.includes(seachEventName)) &&
+                    (eventStatus === 'All' ||
+                      eve.payment_status.includes(eventStatus)),
+                )
                 .map((even, index) => {
                   return (
                     <TableRow className="border-b-2 text-start" key={index}>
@@ -310,8 +325,22 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                       </TableCell>
 
                       <TableCell>
-                        {even.payment_type === 'wire-transfer' && (
-                          <Button>Check</Button>
+                        {even.payment_status === 'Pending' && (
+                          <span className="rounded-md bg-violet-500 p-2 text-white">
+                            Pending
+                          </span>
+                        )}
+
+                        {even.payment_status === 'Approved' && (
+                          <span className="rounded-md bg-green-500 p-2 text-white">
+                            Approved
+                          </span>
+                        )}
+
+                        {even.payment_status === 'Rejected' && (
+                          <span className="rounded-md bg-red-500 p-2 text-white">
+                            Rejected
+                          </span>
                         )}
                       </TableCell>
                     </TableRow>

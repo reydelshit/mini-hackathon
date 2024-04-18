@@ -5,17 +5,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import Gcash from '@/assets/gcash.png';
 import PayMaya from '@/assets/paymaya.png';
+import { useToast } from '@/components/ui/use-toast';
+import axios from 'axios';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
-import { useToast } from '@/components/ui/use-toast';
-import moment from 'moment';
 
 const Payment = () => {
   const [image, setImage] = useState<string | null>(null);
   const [gcashImage, setGcashImage] = useState<string | null>(null);
   const [paymayaImage, setPaymayaImage] = useState<string | null>(null);
-
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(
+    'gcash' as 'gcash' | 'paymaya' | '',
+  );
   const [studentCode, setStudentCode] = useState('');
   const [paymentAmount, setPaymentAmount] = useState(0);
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -64,23 +66,23 @@ const Payment = () => {
             .post(`${import.meta.env.VITE_MINI_HACKATHON}/event-records.php`, {
               student_code_id: studentCode,
               amount: paymentAmount,
-              payment_type: 'wire-transfer',
+              payment_type: selectedPaymentMethod,
               event_id: id,
               phone_number: phoneNumber,
               reference_no: reference,
               proof_image: image,
+              payment_status: 'Pending',
             })
             .then((res) => {
               if (res.data.status === 'success') {
                 console.log(res.data);
 
                 toast({
-                  title: 'Sucessfully Registered the student ' + studentCode,
+                  title: 'Sucessfully Registered ' + studentCode,
                   description: moment().format('LLL'),
                 });
 
-                setStudentCode('');
-                setPaymentAmount(0);
+                window.location.reload();
               }
             });
 
@@ -107,12 +109,21 @@ const Payment = () => {
     };
   };
 
+  const handleChangeTabs = (value: string) => {
+    console.log(value);
+    setSelectedPaymentMethod(value as 'gcash' | 'paymaya');
+  };
+
   return (
     <div className="flex h-full w-full items-center justify-center">
       <div className="absolute top-0  flex h-full w-[100%]  justify-center overflow-x-hidden bg-white bg-opacity-85">
         <div className="my-[5rem] h-fit w-[40rem] rounded-md border-2 bg-white p-2">
           <h1 className="my-4 text-center text-4xl font-bold">PAY NOW!</h1>
-          <Tabs defaultValue="gcash" className="w-full">
+          <Tabs
+            onValueChange={handleChangeTabs}
+            defaultValue="gcash"
+            className="w-full"
+          >
             <TabsList className="w-full">
               <TabsTrigger className="w-[50%]" value="gcash">
                 Gcash
