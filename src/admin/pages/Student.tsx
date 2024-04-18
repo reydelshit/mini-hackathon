@@ -26,7 +26,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { FiEdit3 } from 'react-icons/fi';
-import { StudentTypes } from '@/types/student';
+import { StudentTypes } from '@/types/types';
 import AddStudentsModal from '../components/students/AddStudents';
 import QRCode from 'react-qr-code';
 

@@ -1,12 +1,12 @@
-import { useState } from 'react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Link, Route, Routes } from 'react-router-dom';
 import Logo from '@/assets/logo.jpg';
-import { Button } from '@/components/ui/button';
-import { ExitIcon, HomeIcon, ReaderIcon } from '@radix-ui/react-icons';
-import Students from '../pages/Student';
-import NotFound from '../pages/NotFound';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { HomeIcon } from '@radix-ui/react-icons';
+import { useState } from 'react';
+import { Link, Route, Routes } from 'react-router-dom';
 import Dashboard from '../pages/Dashboard';
+import NotFound from '../pages/NotFound';
+import Students from '../pages/Student';
+import Events from '../pages/Events';
 
 export default function Sidebar() {
   const [width, setWidth] = useState<number>(5);
@@ -117,7 +117,7 @@ export default function Sidebar() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
-
+          <Route path="/events/:id" element={<Events />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/*" element={<NotFound />} />
           <Route path="/*/*" element={<NotFound />} />

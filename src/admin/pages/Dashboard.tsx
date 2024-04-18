@@ -1,5 +1,5 @@
 import { Label } from '@/components/ui/label';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Select,
   SelectContent,
@@ -12,12 +12,16 @@ import { Button } from '@/components/ui/button';
 import axios from 'axios';
 import { useToast } from '@/components/ui/use-toast';
 import moment from 'moment';
+import { EventTypes } from '@/types/types';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [event, setEvent] = useState({});
   const [eventType, setEventType] = useState('');
   const { toast } = useToast();
+
+  const [events, setEvents] = useState<EventTypes[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -37,6 +41,7 @@ const Dashboard = () => {
       .post(`${import.meta.env.VITE_MINI_HACKATHON}/events.php`, {
         ...event,
         event_type: eventType,
+        status: 'Ongoing',
       })
       .then((res) => {
         console.log(res.data);
@@ -50,22 +55,47 @@ const Dashboard = () => {
       });
   };
 
+  const fetchEvents = async () => {
+    await axios
+      .get(`${import.meta.env.VITE_MINI_HACKATHON}/events.php`)
+      .then((res) => {
+        console.log(res.data);
+        setEvents(res.data);
+      });
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
   return (
     <div className="relative ml-[6rem] mt-[2rem] h-full">
       <h1 className="my-4 text-2xl font-bold">Dashboard</h1>
 
       <div className="grid w-full grid-cols-4">
-        <div className="hover:bg-primary-bg flex h-[10rem] w-[20rem] cursor-pointer flex-col items-start justify-between rounded-lg border-4 border-dashed border-green-600 bg-white p-4">
-          <h1 className="text-2xl font-bold">HACKATHON PAYMENTS</h1>
-          <div className="flex w-full items-center justify-between">
-            <span className="text-sm">April 19, 2024</span>
+        {events.map((event, index) => (
+          <div
+            key={index}
+            className="hover:bg-primary-bg flex h-[10rem] w-[20rem] cursor-pointer flex-col items-start justify-between rounded-3xl border-4 border-green-600 bg-white p-4"
+          >
+            <Link
+              className="flex h-full w-full flex-col justify-between"
+              to={`/admin/events/${event.event_id}`}
+            >
+              <h1 className="text-3xl font-bold">{event.event_title}</h1>
+              <div className="flex w-full items-center justify-between">
+                <span className="text-sm">
+                  {moment(event.event_date).format('LLL')}
+                </span>
 
-            <div className="flex flex-col">
-              {/* <Label>Subs</Label> */}
-              <span className="text-lg font-semibold">100</span>
-            </div>
+                <div className="flex flex-col">
+                  {/* <Label>Subs</Label> */}
+                  {/* <span className="text-lg font-semibold">100</span> */}
+                </div>
+              </div>{' '}
+            </Link>
           </div>
-        </div>
+        ))}
 
         <div
           onClick={() => setShowAddEvent(true)}
