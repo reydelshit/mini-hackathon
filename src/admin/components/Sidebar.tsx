@@ -1,12 +1,13 @@
 import Logo from '@/assets/logo.jpg';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { PiStudent } from 'react-icons/pi';
 import { HomeIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import Dashboard from '../pages/Dashboard';
+import Events from '../pages/Events';
 import NotFound from '../pages/NotFound';
 import Students from '../pages/Student';
-import Events from '../pages/Events';
 
 export default function Sidebar() {
   const [width, setWidth] = useState<number>(5);
@@ -66,18 +67,18 @@ export default function Sidebar() {
               to="/admin/students"
               className="hover:bg-primary-color mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold  text-black hover:text-white"
             >
-              <HomeIcon className="mr-2 h-[1.5rem] w-5" /> Students
+              <PiStudent className="mr-2 h-[1.5rem] w-5" /> Students
             </Link>
           ) : (
             <Link
               to="/admin/students"
               className="hover:bg-primary-color mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold text-black hover:text-white "
             >
-              <HomeIcon className="mr-2 h-[1.5rem] w-5" />
+              <PiStudent className="mr-2 h-[1.5rem] w-5" />
             </Link>
           )}
 
-          {isMouseOver ? (
+          {/* {isMouseOver ? (
             <Link
               to="/admin/representatives"
               className="hover:bg-primary-color mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold text-black hover:text-white "
@@ -91,7 +92,7 @@ export default function Sidebar() {
             >
               <HomeIcon className="mr-2 h-[1.5rem] w-5" />
             </Link>
-          )}
+          )} */}
         </div>
         {/* 
         <footer className="mt-auto">
@@ -118,6 +119,7 @@ export default function Sidebar() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/students" element={<Students />} />
           <Route path="/events/:id" element={<Events />} />
+
           <Route path="*" element={<NotFound />} />
           <Route path="/*" element={<NotFound />} />
           <Route path="/*/*" element={<NotFound />} />

@@ -3,10 +3,13 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PaymentRegister from '../components/PaymentRegister';
+import moment from 'moment';
 
 const Events = () => {
   const [events, setEvents] = useState<EventTypes[]>([]);
   const [eventType, setEventType] = useState<string>('');
+
+  const [event, setEvent] = useState({} as EventTypes);
 
   const { id } = useParams<{ id: string }>();
 
@@ -20,7 +23,7 @@ const Events = () => {
         if (res.data[0].event_type.length > 0) {
           setEventType(res.data[0].event_type);
         }
-        setEvents(res.data);
+        setEvent(res.data[0]);
       });
   };
 
@@ -30,10 +33,13 @@ const Events = () => {
 
   return (
     <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
-      <h1 className="my-4 text-2xl font-bold">Students</h1>
+      <div>
+        <h1 className="my-4 text-2xl font-bold">{event.event_title}</h1>
+        <p>{moment(event.event_date).format('LLL')}</p>
+      </div>
 
       {eventType === 'registration-payment' || eventType === 'registration' ? (
-        <PaymentRegister />
+        <PaymentRegister eventTitle={event.event_title} />
       ) : (
         <div>
           Event type other than registration-payment or registration is not

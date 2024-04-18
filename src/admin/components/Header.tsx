@@ -13,7 +13,7 @@ const Header = () => {
         </Avatar>
 
         <div className="flex items-center">
-          <h1 className="text-xl font-semibold">Cyril Nnaemeka</h1>
+          <h1 className="text-xl font-semibold">Reydel Ocon</h1>
         </div>
       </div>
     </div>

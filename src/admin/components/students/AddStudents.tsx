@@ -15,10 +15,6 @@ export default function AddStudentsModal({
   setShowAddStudents: (value: boolean) => void;
 }) {
   const [students, setStudents] = useState<StudentTypes[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState('' as string);
-  const [selectedSlot, setSelectedSlot] = useState('' as string);
-
-  const [isVip, setIsVip] = useState(false);
 
   const [image, setImage] = useState<string | null>(null);
 
