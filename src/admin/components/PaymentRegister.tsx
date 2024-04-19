@@ -277,6 +277,24 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                   <SelectItem value="Rejected">Rejected</SelectItem>
                 </SelectContent>
               </Select>
+              <div className="flex items-center gap-4">
+                TOTAL:
+                <span className="rounded-md bg-primary-color p-2  font-bold text-white ">
+                  {events
+                    .filter(
+                      (eve) =>
+                        (seachEventName === 'All' ||
+                          eve.student_code_id.includes(seachEventName)) &&
+                        (eventStatus === 'All' ||
+                          eve.payment_status.includes(eventStatus)),
+                    )
+                    .reduce((total, event) => total + event.amount, 0)
+                    .toLocaleString('en-PH', {
+                      style: 'currency',
+                      currency: 'PHP',
+                    })}
+                </span>
+              </div>
             </div>
           </div>
 
