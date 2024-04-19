@@ -10,6 +10,9 @@ export default function Login() {
   const [errorInput, setErrorInput] = useState<string>('');
   const [error, setError] = useState<string>('');
 
+  const usernameLogin = 'admin';
+  const passwordLogin = 'admin';
+
   const [credentials, setCredentials] = useState([]);
 
   const handleChange = (e: ChangeEvent) => {
@@ -26,6 +29,14 @@ export default function Login() {
   const handleLogin = () => {
     if (!username || !password)
       return setErrorInput('Please fill in all fields');
+
+    if (username !== usernameLogin || password !== passwordLogin) {
+      return setError('Invalid username or password');
+    } else {
+      localStorage.setItem('mini_hackathon_token', 'admin');
+
+      window.location.href = '/admin';
+    }
 
     // axios
     //   .get(`${import.meta.env.VITE_MINI_HACKATHON}/login.php`, {
@@ -59,10 +70,10 @@ export default function Login() {
 
   return (
     <div className="flex h-dvh w-dvw items-center justify-center">
-      <div className="flex h-[25rem] w-[40%] flex-col items-center justify-center rounded-md border-4 border-green-500 bg-white p-4 px-[5rem] text-black shadow-slate-400">
+      <div className="flex h-[25rem] w-[40%] flex-col items-center justify-center rounded-md border-2 border-primary-color bg-white p-4 px-[5rem] text-black shadow-slate-400">
         <Input
           onChange={handleChange}
-          className="mb-8 w-full rounded-full border-4 border-green-500 p-8 text-2xl text-green-500 placeholder:text-2xl placeholder:font-semibold placeholder:text-green-500 focus:outline-none"
+          className="placeholder: mb-8 w-full p-8  text-2xl placeholder:text-2xl placeholder:font-semibold focus:outline-none"
           placeholder="Username"
           name="username"
           required
@@ -70,7 +81,7 @@ export default function Login() {
 
         {/* <Label className="mb-1 self-start text-sm">Password</Label> */}
         <Input
-          className="mb-2 w-full rounded-full border-4 border-green-500 p-8 text-2xl text-green-500 placeholder:text-2xl placeholder:font-semibold placeholder:text-green-500 focus:outline-none"
+          className="placeholder: mb-2 w-full p-8  text-2xl placeholder:text-2xl placeholder:font-semibold focus:outline-none"
           type="password"
           onChange={handleChange}
           name="password"
@@ -81,25 +92,25 @@ export default function Login() {
         <div className="w-full px-2 text-end">
           <a
             href="/register"
-            className="text-[1.2rem] text-green-500 underline"
+            className="text-[1.2rem] text-primary-color underline"
           >
             Create an account
           </a>
         </div>
         <Button
-          className="mt-[2rem] w-[10rem] bg-green-500 p-2 text-white"
+          className="my-2 block h-[3.5rem] w-[15rem] bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
           onClick={handleLogin}
         >
           Login
         </Button>
 
         {error.length > 0 && (
-          <p className="text-primary-red my-2 rounded-md border-2 bg-white p-2 font-semibold">
+          <p className="text-red my-2 rounded-md border-2 bg-white p-2 font-semibold text-red-600">
             {error}
           </p>
         )}
         {errorInput && (
-          <p className="text-primary-red rounded-md border-2 bg-white p-2 font-semibold">
+          <p className="text-red rounded-md border-2 bg-white p-2 font-semibold text-red-600">
             {errorInput}
           </p>
         )}
