@@ -24,6 +24,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { EventRecordsType } from '@/types/types';
 import moment from 'moment';
 import { IoCloseSharp } from 'react-icons/io5';
+import PageHeader from '../utils/PageHeaders';
 
 export default function WireTransfer() {
   const [events, setEvents] = useState<EventRecordsType[]>([]);
@@ -94,7 +95,7 @@ export default function WireTransfer() {
 
   return (
     <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
-      <h1>Wire Transfer</h1>
+      <PageHeader style="" title="Online Transfer" />
 
       <div className="flex w-full flex-col-reverse gap-10 md:flex-row">
         <div className="mt-[1rem] w-full rounded-lg bg-white p-2">

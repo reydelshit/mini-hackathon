@@ -33,4 +33,5 @@ export type EventRecordsType = {
   proof_image: string;
   reference_no: string;
   payment_status: string;
+  generatedReference_no: string;
 };

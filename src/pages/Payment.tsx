@@ -24,6 +24,11 @@ const Payment = () => {
   const [reference, setReference] = useState('');
   const { toast } = useToast();
   const { event_id } = useParams() as { event_id: string };
+  const [showProofReference, setShowProofReference] = useState(false);
+  const [generatedReference, setGeneratedReference] = useState('');
+  const [fullname, setFullname] = useState('');
+  const [course, setCourse] = useState('');
+  const [yearBlock, setYearBlock] = useState('');
 
   const id = atob(event_id).replace(/[^0-9]/g, '');
 
@@ -56,7 +61,7 @@ const Payment = () => {
 
     axios
       .get(`${import.meta.env.VITE_MINI_HACKATHON}/event-records.php`, {
-        params: { student_code_id: studentCode },
+        params: { student_code_id: studentCode, event_id: id },
       })
       .then((res) => {
         console.log(res.data);
@@ -72,6 +77,9 @@ const Payment = () => {
               reference_no: reference,
               proof_image: image,
               payment_status: 'Pending',
+              generatedReference_no: btoa(
+                fullname + studentCode + moment().format('YYYYMMDD'),
+              ),
             })
             .then((res) => {
               if (res.data.status === 'success') {
@@ -82,7 +90,9 @@ const Payment = () => {
                   description: moment().format('LLL'),
                 });
 
-                window.location.reload();
+                setShowProofReference(true);
+
+                // window.location.reload();
               }
             });
 
@@ -115,8 +125,42 @@ const Payment = () => {
   };
 
   return (
-    <div className="flex h-full w-full items-center justify-center">
-      <div className="absolute top-0  flex h-full w-[100%]  justify-center overflow-x-hidden bg-white bg-opacity-85">
+    <div className="relative flex h-full w-full items-center justify-center">
+      {showProofReference && (
+        <div className="absolute top-0  flex h-full w-[100%]  justify-center overflow-x-hidden bg-white bg-opacity-85">
+          <div className="my-[5rem] flex h-[25rem] w-[40rem] flex-col items-center justify-center rounded-md border-2 border-primary-color bg-white p-2 text-center">
+            <h1 className="my-4 text-2xl font-bold">
+              Make a screenshot or copy your payment reference code{' '}
+            </h1>
+
+            <span className="my-4 block">
+              {btoa(fullname + studentCode + moment().format('YYYYMMDD'))}
+            </span>
+
+            <Button
+              className=" block h-[3.5rem] w-fit bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  btoa(fullname + studentCode + moment().format('YYYYMMDD')),
+                );
+
+                toast({
+                  title: 'Reference Code Copied',
+                  description: moment().format('LLL'),
+                });
+
+                setShowProofReference(false);
+
+                window.location.reload();
+              }}
+            >
+              Copy Reference Code
+            </Button>
+          </div>
+        </div>
+      )}
+
+      <div className="flex h-full w-[100%]  justify-center overflow-x-hidden bg-white bg-opacity-85">
         <div className="my-[5rem] h-fit w-[40rem] rounded-md border-2 bg-white p-2">
           <h1 className="my-4 text-center text-4xl font-bold">PAY NOW!</h1>
           <Tabs
@@ -145,14 +189,24 @@ const Payment = () => {
                     <Label className="text-md my-2 block text-start">
                       Fullname
                     </Label>
-                    <Input type="text" className="w-full" />
+                    <Input
+                      onChange={(e) => setFullname(e.target.value)}
+                      type="text"
+                      className="w-full"
+                      required
+                    />
                   </div>
                 </div>
                 <div>
                   <Label className="text-md my-2 block text-start">
                     Course / Year and Block
                   </Label>
-                  <Input type="text" className="w-full" />
+                  <Input
+                    onChange={(e) => setCourse(e.target.value)}
+                    type="text"
+                    className="w-full"
+                    required
+                  />
                 </div>
 
                 <div>

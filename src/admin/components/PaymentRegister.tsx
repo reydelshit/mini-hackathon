@@ -9,6 +9,8 @@ import {
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 
 import { Input } from '@/components/ui/input';
 import {
@@ -49,8 +51,13 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
   const [studentProfile, setStudentProfile] = useState(
     {} as StudentTypes | null,
   );
-
   const copyLink = `http://192.168.0.104:5173/pay/${btoa(eventTitle.toString())}/${btoa('event-id=' + id ?? ''.toString())}`;
+
+  // const printRef = useRef();
+  const printRef = useRef<HTMLDivElement | null>(null);
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current!,
+  });
 
   const handleDelete = (id: number) => {
     axios
@@ -91,8 +98,6 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
         params: { student_code_id: studentCode },
       })
       .then((res) => {
-        console.log(res.data);
-
         if (res.data.length === 0) {
           axios
             .post(`${import.meta.env.VITE_MINI_HACKATHON}/event-records.php`, {
@@ -101,15 +106,19 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
               payment_type: 'cash',
               event_id: id,
               payment_status: 'Approved',
+              phone_number: 'n/a',
+              reference_no: 'n/a',
+              proof_image: 'n/a',
             })
             .then((res) => {
+              console.log(res.data);
               if (res.data.status === 'success') {
-                console.log(res.data);
-
                 toast({
                   title: 'Sucessfully Registered the student ' + studentCode,
                   description: moment().format('LLL'),
                 });
+
+                // handlePrint();
 
                 setStudentCode('');
                 setPaymentAmount(0);
@@ -299,6 +308,9 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                 </TableHead>
                 <TableHead className="font-bold text-black">Date</TableHead>
                 <TableHead className="font-bold text-black">Status</TableHead>
+                <TableHead className="font-bold text-black">
+                  Online Transfer Ref No.
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -374,6 +386,12 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                           </span>
                         )}
                       </TableCell>
+
+                      <TableCell className="text-center">
+                        {even.generatedReference_no.length > 0
+                          ? even.generatedReference_no
+                          : 'n/a'}
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -424,7 +442,10 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
               {studentCode.length > 0 && studentCode !== '0' && (
                 <div className="mt-[1rem] flex h-full w-full flex-col items-center justify-center p-2">
-                  <div className="flex w-full flex-col justify-center md:w-[60%]">
+                  <div
+                    ref={printRef}
+                    className="flex w-full flex-col justify-center md:w-[60%]"
+                  >
                     <h1 className="text-center text-lg font-semibold">
                       Student Details
                     </h1>
