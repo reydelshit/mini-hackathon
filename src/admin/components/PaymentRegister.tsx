@@ -22,10 +22,10 @@ import {
 } from '@/components/ui/table';
 
 import { useToast } from '@/components/ui/use-toast';
+import { EventRecordsType } from '@/types/types';
 import { Label } from '@radix-ui/react-label';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import moment from 'moment';
-import { EventRecordsType } from '@/types/types';
 
 const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
   const [events, setEvents] = useState<EventRecordsType[]>([]);
@@ -248,7 +248,6 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
             <TableHeader>
               <TableRow>
                 <TableHead className="text-center font-bold "></TableHead>
-                {/* <TableHead className="font-bold text-black">Event</TableHead> */}
                 <TableHead className="font-bold text-black">Student</TableHead>
                 <TableHead className=" font-bold text-black">Amount</TableHead>
 
@@ -350,7 +349,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
           </Table>
         </div>
 
-        <div className="bg-primary-bg flex w-full flex-col items-center gap-4 md:w-[30%]">
+        <div className="flex w-full flex-col items-center gap-4 bg-primary-bg md:w-[30%]">
           <Button onClick={handleShowRegister} className="w-full">
             Register Student
           </Button>
@@ -362,13 +361,13 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
             Generate Payment Link
           </Button>
           <Button onClick={handleShowWireTransfer} className="w-full">
-            Wire Transfer (Gcash, Payment)
+            Online Transfer (Gcash, Payment)
           </Button>
         </div>
       </div>
 
       {showRegister && (
-        <div className="bg-primary-bg absolute top-0 flex h-full w-full flex-col items-center justify-center bg-opacity-90 md:w-full">
+        <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90 md:w-full">
           <div className="mt-[-10rem]flex relative flex h-[85%] w-full flex-col items-center justify-center rounded-lg border-2 bg-white md:h-[60%] md:w-[50%]">
             <Button
               onClick={() => setShowRegister(false)}
@@ -394,7 +393,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                       Student Details
                     </h1>
                     <form onSubmit={handleSubmitRegister}>
-                      <h1 className="bg-primary-color h-[2rem] rounded-md p-2 text-center text-white">
+                      <h1 className="h-[2rem] rounded-md bg-primary-color p-2 text-center text-white">
                         {studentCode.replace(/[^0-9-]/g, '')}
                       </h1>
                       <Label className="my-2">Amount</Label>
@@ -420,7 +419,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
       )}
 
       {generatePaymentLink && (
-        <div className="bg-primary-bg absolute top-0 flex h-full w-full flex-col items-center justify-center bg-opacity-90">
+        <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
           <div className="relative mt-[-10rem] flex h-[40%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white p-4">
             <Button
               onClick={() => setGeneratePaymentLink(false)}
@@ -430,11 +429,11 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
             </Button>
 
             <h1 className="my-4 text-[1.5rem] font-semibold">
-              Share this payment link for wire transfer
+              Share this payment link for online transfer
             </h1>
 
             <div className="flex w-full flex-col items-center text-center">
-              <span className="bg-primary-color w-fit rounded-lg border-2 p-4 text-white">
+              <span className="w-fit rounded-lg border-2 bg-primary-color p-4 text-white">
                 {copyLink}
               </span>
               <Button onClick={handleCopy} className="my-4 h-[3rem] w-[9rem]">
@@ -446,7 +445,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
       )}
 
       {showUploadWireTransfer && (
-        <div className="bg-primary-bg absolute top-0 flex h-full w-full flex-col items-center justify-center bg-opacity-90">
+        <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
           <div className="relative mt-[-10rem] flex h-[50%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
             <Button
               onClick={() => setShowUploadWireTransfer(false)}
@@ -455,7 +454,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
               Close
             </Button>
             <h1 className="my-4 text-[1.5rem] font-semibold">
-              QR Code for wire transfer
+              QR Code for online transfer
             </h1>
 
             <div className="flex w-full justify-around">
@@ -520,7 +519,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
       )}
 
       {showImage && (
-        <div className="bg-primary-bg absolute bottom-0 top-[-10rem] flex h-screen w-dvw items-center justify-center bg-opacity-85">
+        <div className="absolute bottom-0 top-[-10rem] flex h-screen w-dvw items-center justify-center bg-primary-bg bg-opacity-85">
           <div className="flex h-[80%] w-[80%] flex-col items-center justify-center">
             <Button
               className="my-2 bg-red-500"

@@ -1,5 +1,6 @@
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import React, { useEffect, useState } from 'react';
 import {
   Select,
   SelectContent,
@@ -7,18 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import axios from 'axios';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
-import moment from 'moment';
 import { EventTypes } from '@/types/types';
+import axios from 'axios';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [event, setEvent] = useState({});
   const [eventType, setEventType] = useState('');
+  const [eventDescription, setEventDescription] = useState('');
   const { toast } = useToast();
 
   const [events, setEvents] = useState<EventTypes[]>([]);
@@ -34,6 +36,11 @@ const Dashboard = () => {
     setEventType(selectedEvent);
   };
 
+  const handleTextArea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setEventDescription(value);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -42,6 +49,7 @@ const Dashboard = () => {
         ...event,
         event_type: eventType,
         status: 'Ongoing',
+        description: eventDescription,
       })
       .then((res) => {
         console.log(res.data);
@@ -70,44 +78,80 @@ const Dashboard = () => {
 
   return (
     <div className="relative ml-[6rem] mt-[2rem] h-full">
-      <h1 className="my-4 text-2xl font-bold">Dashboard</h1>
+      <div className="flex w-full justify-between pr-4">
+        <h1 className="my-4 text-2xl font-bold">Dashboard</h1>
+
+        <div className="flex flex-col gap-2">
+          <div className="w-[8rem] rounded-md bg-yellow-600 p-2 text-center">
+            {' '}
+            Ongoing{' '}
+          </div>
+          <div className="w-[8rem] rounded-md bg-green-600 p-2 text-center">
+            {' '}
+            Completed{' '}
+          </div>
+          <div className="w-[8rem] rounded-md bg-red-600  p-2 text-center">
+            {' '}
+            Cancelled{' '}
+          </div>
+        </div>
+      </div>
 
       <div className="grid w-full grid-cols-4">
         {events.map((event, index) => (
           <div
             key={index}
-            className="hover:bg-primary-bg flex h-[10rem] w-[20rem] cursor-pointer flex-col items-start justify-between rounded-3xl border-4 border-green-600 bg-white p-4"
+            className={`
+          ${
+            event.status === 'Ongoing'
+              ? 'border-4 border-yellow-600 '
+              : event.status === 'Completed'
+                ? 'border-4 border-green-600 '
+                : 'border-4 border-red-600 '
+          }
+          flex h-[10rem] w-[20rem]  cursor-pointer flex-col items-start justify-between rounded-3xl bg-white p-4 hover:bg-primary-bg
+        `}
           >
             <Link
               className="flex h-full w-full flex-col justify-between"
               to={`/admin/events/${event.event_id}`}
             >
-              <h1 className="text-3xl font-bold">{event.event_title}</h1>
+              <h1
+                className={`text-3xl font-bold ${
+                  event.status === 'Ongoing'
+                    ? ' text-yellow-600 '
+                    : event.status === 'Completed'
+                      ? ' text-green-600 '
+                      : ' text-red-600 '
+                }`}
+              >
+                {event.event_title}
+              </h1>
               <div className="flex w-full items-center justify-between">
                 <span className="text-sm">
-                  {moment(event.event_date).format('LLL')}
+                  {moment(event.event_deadline).format('LLL')}
                 </span>
-
+                {event.status}
                 <div className="flex flex-col">
                   {/* <Label>Subs</Label> */}
                   {/* <span className="text-lg font-semibold">100</span> */}
                 </div>
-              </div>{' '}
+              </div>
             </Link>
           </div>
         ))}
 
         <div
           onClick={() => setShowAddEvent(true)}
-          className="hover:bg-primary-bg flex h-[10rem] w-[20rem] cursor-pointer flex-col items-center justify-center rounded-lg border-4 border-dashed border-gray-500 bg-white p-4 text-center"
+          className="flex h-[10rem] w-[20rem] cursor-pointer flex-col items-center justify-center rounded-lg border-4 border-dashed border-gray-500 bg-white p-4 text-center hover:bg-primary-bg"
         >
           <p className="text-7xl  font-light">+</p>
         </div>
       </div>
 
       {showAddEvent && (
-        <div className="bg-primary-bg absolute top-0 flex h-full w-full flex-col items-center justify-center bg-opacity-90">
-          <div className="relative mt-[-10rem] flex h-[40%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
+        <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
+          <div className="relative mt-[-10rem] flex h-[50%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
             <Button
               onClick={() => setShowAddEvent(false)}
               className="absolute right-5 top-5"
@@ -130,7 +174,9 @@ const Dashboard = () => {
                   </SelectItem>
                   <SelectItem value="payment">Payment</SelectItem>
                   <SelectItem value="registration">Registration</SelectItem>
-                  <SelectItem value="attendance">Attendance</SelectItem>
+                  <SelectItem value="attendance">
+                    Attendance (Unavailable)
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
@@ -145,7 +191,17 @@ const Dashboard = () => {
               </div>
 
               <div className="w-full">
-                <Label className="my-[1rem] block">Date</Label>
+                <Label className="my-[1rem] block">Description</Label>
+
+                <Textarea
+                  onChange={handleTextArea}
+                  className="w-full"
+                  name="description"
+                />
+              </div>
+
+              <div className="w-full">
+                <Label className="my-[1rem] block">Deadline</Label>
                 <Input
                   onChange={handleChange}
                   className="w-full"

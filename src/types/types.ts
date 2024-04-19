@@ -10,8 +10,10 @@ export type EventTypes = {
   event_id: number;
   event_title: string;
   event_type: string;
-  event_date: string;
+  event_deadline: string;
   created_at: string;
+  description: string;
+  status: string;
 };
 
 export type EventRecordsType = {

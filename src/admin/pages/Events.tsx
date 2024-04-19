@@ -1,13 +1,22 @@
+import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { EventTypes } from '@/types/types';
 import axios from 'axios';
+import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PaymentRegister from '../components/PaymentRegister';
-import moment from 'moment';
+import { toast } from '@/components/ui/use-toast';
 
 const Events = () => {
-  const [events, setEvents] = useState<EventTypes[]>([]);
   const [eventType, setEventType] = useState<string>('');
+  const [eventStatus, setEventStatus] = useState('Ongoing' as string);
 
   const [event, setEvent] = useState({} as EventTypes);
 
@@ -31,14 +40,57 @@ const Events = () => {
     fetchEvents();
   }, []);
 
+  const handleStatus = (status: string) => {
+    const selectedStatus = status;
+
+    setEventStatus(selectedStatus);
+
+    axios
+      .put(`${import.meta.env.VITE_MINI_HACKATHON}/events.php`, {
+        event_id: id,
+        status: status,
+      })
+      .then((res) => {
+        console.log(res.data);
+
+        if (res.data.status === 'success') {
+          toast({
+            title: 'Event status updated',
+            description: moment().format('LLL'),
+          });
+        }
+      });
+  };
+
   return (
     <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
-      <div>
-        <h1 className="my-4 text-2xl font-bold">{event.event_title}</h1>
-        <p>{moment(event.event_date).format('LLL')}</p>
+      <div className="flex w-[75%] items-center justify-between">
+        <div>
+          <h1 className="my-4 text-2xl font-bold">{event.event_title}</h1>
+          <h4 className="my-4 text-xl font-bold">{event.description}</h4>
+
+          <p>Deadline: {moment(event.event_deadline).format('LLL')}</p>
+        </div>
+
+        <div className="flex flex-col">
+          <Label className="my-2  block">Status</Label>
+
+          <Select value={eventStatus} onValueChange={handleStatus}>
+            <SelectTrigger className="w-[15rem] bg-white text-black">
+              <SelectValue placeholder="Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Ongoing">Ongoing</SelectItem>
+              <SelectItem value="Completed">Completed</SelectItem>
+              <SelectItem value="Cancelled">Cancelled</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
-      {eventType === 'registration-payment' || eventType === 'registration' ? (
+      {eventType === 'registration-payment' ||
+      eventType === 'registration' ||
+      eventType === 'payment' ? (
         <PaymentRegister eventTitle={event.event_title} />
       ) : (
         <div>

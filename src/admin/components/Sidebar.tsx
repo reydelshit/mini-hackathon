@@ -4,11 +4,14 @@ import { PiStudent } from 'react-icons/pi';
 import { HomeIcon } from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { ExitIcon } from '@radix-ui/react-icons';
+
 import Dashboard from '../pages/Dashboard';
 import Events from '../pages/Events';
 import NotFound from '../pages/NotFound';
 import Students from '../pages/Student';
-import WireTransfer from '../pages/WireTransfer';
+import WireTransfer from '../pages/OnlineTransfer';
 
 export default function Sidebar() {
   const [width, setWidth] = useState<number>(5);
@@ -22,6 +25,11 @@ export default function Sidebar() {
   const handleMouseLeave = () => {
     setWidth(5);
     setIsMouseOver(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login';
   };
 
   return (
@@ -50,14 +58,14 @@ export default function Sidebar() {
           {isMouseOver ? (
             <Link
               to="/admin/"
-              className="hover:bg-primary-color mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold  text-black hover:text-white"
+              className="mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold text-black  hover:bg-primary-color hover:text-white"
             >
               <HomeIcon className="mr-2 h-[1.5rem] w-5" /> Dashboard
             </Link>
           ) : (
             <Link
               to="/admin/"
-              className="hover:bg-primary-color mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold  text-black hover:text-white"
+              className="mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold text-black  hover:bg-primary-color hover:text-white"
             >
               <HomeIcon className="mr-2 h-[1.5rem] w-5" />
             </Link>
@@ -66,14 +74,14 @@ export default function Sidebar() {
           {isMouseOver ? (
             <Link
               to="/admin/students"
-              className="hover:bg-primary-color mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold  text-black hover:text-white"
+              className="mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold text-black  hover:bg-primary-color hover:text-white"
             >
               <PiStudent className="mr-2 h-[1.5rem] w-5" /> Students
             </Link>
           ) : (
             <Link
               to="/admin/students"
-              className="hover:bg-primary-color mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold text-black hover:text-white "
+              className="mb-2 flex w-full rounded-sm bg-inherit p-2 font-semibold text-black hover:bg-primary-color hover:text-white "
             >
               <PiStudent className="mr-2 h-[1.5rem] w-5" />
             </Link>
@@ -95,7 +103,7 @@ export default function Sidebar() {
             </Link>
           )} */}
         </div>
-        {/* 
+
         <footer className="mt-auto">
           {isMouseOver ? (
             <Button
@@ -112,7 +120,7 @@ export default function Sidebar() {
               <ExitIcon className="mr-2 h-[1.5rem] w-5" />
             </Button>
           )}
-        </footer> */}
+        </footer>
       </div>
 
       <div className="h-full w-full">
