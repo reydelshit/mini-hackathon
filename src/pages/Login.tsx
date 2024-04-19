@@ -79,6 +79,8 @@ export default function Login() {
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
 
+        <h1 className="my-2 text-4xl font-bold">MINI HACKATHON</h1>
+
         <Input
           onChange={handleChange}
           className="placeholder: mb-8 w-full p-8  text-2xl placeholder:text-2xl placeholder:font-semibold focus:outline-none"

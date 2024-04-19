@@ -59,6 +59,8 @@ const Events = () => {
             title: 'Event status updated',
             description: moment().format('LLL'),
           });
+
+          fetchEvents();
         }
       });
   };
@@ -67,9 +69,22 @@ const Events = () => {
     <div className="relative ml-[6rem] mt-[2rem] h-full bg-primary-bg md:mr-[1.5rem]">
       <div className="flex w-[81%] items-center justify-between md:flex-row">
         <div>
-          <PageHeader style="text-[3rem]" title={String(event.event_title)} />
-          <h4 className="my-4 text-xl font-bold">{event.description}</h4>
+          <div className="flex items-center gap-4">
+            <PageHeader style="text-[3rem]" title={String(event.event_title)} />{' '}
+            <span
+              className={`my-2 inline-block h-[2.5rem] rounded-md p-2 text-white ${
+                event.status === 'Ongoing'
+                  ? ' bg-yellow-600 '
+                  : event.status === 'Completed'
+                    ? ' bg-green-600 '
+                    : ' bg-red-600 '
+              }`}
+            >
+              {event.status}
+            </span>
+          </div>
 
+          <h4 className="my-4 text-xl font-bold">{event.description}</h4>
           <p>Deadline: {moment(event.event_deadline).format('LLL')}</p>
         </div>
 
