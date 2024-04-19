@@ -1,6 +1,9 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+
+import CICT from '@/assets/cict.jpg';
 
 type ChangeEvent = React.ChangeEvent<HTMLInputElement>;
 
@@ -70,7 +73,12 @@ export default function Login() {
 
   return (
     <div className="flex h-dvh w-dvw items-center justify-center">
-      <div className="flex h-[25rem] w-[40%] flex-col items-center justify-center rounded-md border-2 border-primary-color bg-white p-4 px-[5rem] text-black shadow-slate-400">
+      <div className="flex h-[35rem] w-[40%] flex-col items-center justify-center rounded-md border-2 border-primary-color bg-white p-4 px-[5rem] text-black shadow-slate-400">
+        <Avatar className="my-[1rem] h-[10em] w-[10rem] cursor-pointer">
+          <AvatarImage src={CICT} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+
         <Input
           onChange={handleChange}
           className="placeholder: mb-8 w-full p-8  text-2xl placeholder:text-2xl placeholder:font-semibold focus:outline-none"
@@ -89,14 +97,14 @@ export default function Login() {
           required
         />
 
-        <div className="w-full px-2 text-end">
+        {/* <div className="w-full px-2 text-end">
           <a
             href="/register"
             className="text-[1.2rem] text-primary-color underline"
           >
             Create an account
           </a>
-        </div>
+        </div> */}
         <Button
           className="my-2 block h-[3.5rem] w-[15rem] bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
           onClick={handleLogin}

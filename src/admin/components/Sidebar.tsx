@@ -29,7 +29,7 @@ export default function Sidebar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('mini_hackathon_token');
     window.location.href = '/login';
   };
 
