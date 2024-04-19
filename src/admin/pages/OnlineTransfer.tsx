@@ -38,7 +38,7 @@ export default function WireTransfer() {
   const [showImage, setShowImage] = useState(false);
   const [proofImage, setProofImage] = useState('');
   const [showDuplicate, setShowDuplicate] = useState(false);
-
+  const [showError, setShowError] = useState(false);
   const [duplicate, setDuplicate] = useState<EventRecordsType[]>([]);
 
   const fetchEventsRecords = async () => {
@@ -70,6 +70,8 @@ export default function WireTransfer() {
   };
 
   const handleChangeStatus = async (id: string, status: string) => {
+    if (status === 'Rejected') [setShowError(true)];
+
     await axios
       .put(`${import.meta.env.VITE_MINI_HACKATHON}/wire-transfer-check.php`, {
         event_records_id: id,
@@ -96,6 +98,25 @@ export default function WireTransfer() {
   return (
     <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
       <PageHeader style="" title="Online Transfer" />
+
+      {showError && (
+        <div className="absolute top-0 z-30  flex h-full w-[100%]  justify-center overflow-x-hidden bg-white bg-opacity-85">
+          <div className="my-[5rem] flex h-[25rem] w-[40rem] flex-col items-center justify-center rounded-md border-2 border-primary-color bg-white p-2 text-center">
+            <h1 className="my-4 text-2xl font-bold">
+              SMS notification is sent to the student
+            </h1>
+
+            <Button
+              className=" block h-[3.5rem] w-fit bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+              onClick={() => {
+                setShowError(false);
+              }}
+            >
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
 
       <div className="flex w-full flex-col-reverse gap-10 md:flex-row">
         <div className="mt-[1rem] w-full rounded-lg bg-white p-2">

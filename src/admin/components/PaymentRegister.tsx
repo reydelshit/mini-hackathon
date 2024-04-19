@@ -95,7 +95,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
     axios
       .get(`${import.meta.env.VITE_MINI_HACKATHON}/event-records.php`, {
-        params: { student_code_id: studentCode },
+        params: { student_code_id: studentCode, event_id: id },
       })
       .then((res) => {
         if (res.data.length === 0) {
@@ -109,6 +109,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
               phone_number: 'n/a',
               reference_no: 'n/a',
               proof_image: 'n/a',
+              generatedReference_no: 'n/a',
             })
             .then((res) => {
               console.log(res.data);
@@ -118,7 +119,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                   description: moment().format('LLL'),
                 });
 
-                // handlePrint();
+                handlePrint();
 
                 setStudentCode('');
                 setPaymentAmount(0);
@@ -225,29 +226,24 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
   };
 
   useEffect(() => {
-    // Check if studentCode is not empty
     if (studentCode) {
       axios
         .get(`${import.meta.env.VITE_MINI_HACKATHON}/student.php`, {
           params: { student_id_code: studentCode },
         })
         .then((res) => {
-          // Check if data is available
           if (res.data.length > 0) {
             console.log(res.data[0]);
             setStudentProfile(res.data[0]);
           } else {
-            // Handle case when no data is found
             setStudentProfile(null);
           }
         })
         .catch((error) => {
           console.error('Error fetching student profile:', error);
-          // Handle error, e.g., set studentProfile to null
           setStudentProfile(null);
         });
     } else {
-      // Handle case when studentCode is empty
       setStudentProfile(null);
     }
   }, [studentCode]);
