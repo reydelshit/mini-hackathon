@@ -215,7 +215,12 @@ const Payment = () => {
                 </div>
 
                 <div className="mt-2 flex justify-center gap-4">
-                  <Button type="submit">Submit</Button>
+                  <Button
+                    className="block h-[3.5rem] w-[8rem] bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+                    type="submit"
+                  >
+                    Submit
+                  </Button>
                 </div>
               </form>
             </TabsContent>
@@ -300,7 +305,12 @@ const Payment = () => {
                   />
                 </div>
                 <div className="mt-2 flex justify-center gap-4">
-                  <Button type="submit">Submit</Button>
+                  <Button
+                    className="block h-[3.5rem] w-[8rem] bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+                    type="submit"
+                  >
+                    Submit
+                  </Button>
                 </div>
               </form>
             </TabsContent>

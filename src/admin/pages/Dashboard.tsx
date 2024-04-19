@@ -155,7 +155,7 @@ const Dashboard = () => {
 
       {showAddEvent && (
         <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
-          <div className="relative mt-[-10rem] flex h-[50%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
+          <div className="relative mt-[-10rem] flex h-[50%] w-[50%] flex-col items-center justify-center rounded-lg border-2 border-primary-color bg-white">
             <IoCloseSharp
               onClick={() => setShowAddEvent(false)}
               className="absolute right-5 top-5 h-[5rem] w-[4rem] cursor-pointer hover:text-red-500"

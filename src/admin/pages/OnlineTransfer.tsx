@@ -23,6 +23,7 @@ import { useParams } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast';
 import { EventRecordsType } from '@/types/types';
 import moment from 'moment';
+import { IoCloseSharp } from 'react-icons/io5';
 
 export default function WireTransfer() {
   const [events, setEvents] = useState<EventRecordsType[]>([]);
@@ -222,6 +223,7 @@ export default function WireTransfer() {
                         <div className="flex gap-2">
                           {even.payment_type === 'wire-transfer' && (
                             <Button
+                              className="block h-[3.5rem] w-fit bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
                               onClick={() =>
                                 handleCheckDuplicate(even.reference_no)
                               }
@@ -231,6 +233,7 @@ export default function WireTransfer() {
                           )}
 
                           <Button
+                            className="block h-[3.5rem] w-fit bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
                             onClick={() =>
                               handleChangeStatus(
                                 String(even.event_records_id),
@@ -241,6 +244,7 @@ export default function WireTransfer() {
                             Approve
                           </Button>
                           <Button
+                            className="block h-[3.5rem] w-fit bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
                             onClick={() =>
                               handleChangeStatus(
                                 String(even.event_records_id),
@@ -261,26 +265,24 @@ export default function WireTransfer() {
       </div>
 
       {showDuplicate && (
-        <div className="bg-primary-bg absolute top-0 flex h-full w-full flex-col items-center justify-center bg-opacity-90">
-          <div className="relative mt-[-10rem] flex h-[40%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
-            <Button
+        <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
+          <div className="relative mt-[-10rem] flex h-[40%] w-[50%] flex-col items-center justify-center rounded-lg border-2 border-primary-color bg-white">
+            <IoCloseSharp
               onClick={() => setShowDuplicate(false)}
-              className="absolute right-5 top-5"
-            >
-              Close
-            </Button>
+              className="absolute right-5 top-5 h-[5rem] w-[4rem] cursor-pointer hover:text-red-500"
+            />
             <h1 className="my-4 text-[1.5rem] font-semibold">
               Duplicate Reference No
             </h1>
 
             {duplicate.length > 0 ? (
               <div className="flex w-full flex-col items-start justify-center gap-4 p-4">
-                <h1>Matched Entries</h1>
+                <h1 className="text-2xl font-bold">Matched Entries</h1>
                 {duplicate.map((dup, index) => {
                   return (
                     <div
                       key={index}
-                      className="flex w-full items-center justify-around gap-4 border-2 p-2"
+                      className="flex w-full items-center justify-around gap-4 rounded-md border-2 p-2"
                     >
                       <h1 className="font-semibold">{dup.student_name}</h1>
 
@@ -294,7 +296,7 @@ export default function WireTransfer() {
               </div>
             ) : (
               <div className="flex w-full items-center justify-center">
-                <span className="bg-primary-color w-fit rounded-lg border-2 p-4 text-white">
+                <span className="w-fit rounded-lg border-2 bg-primary-color p-4 text-white">
                   No duplicate reference no
                 </span>
               </div>
@@ -304,17 +306,14 @@ export default function WireTransfer() {
       )}
 
       {showImage && (
-        <div className="bg-primary-bg absolute bottom-0 top-[-10rem] flex h-screen w-dvw items-center justify-center bg-opacity-85">
+        <div className="absolute bottom-0 top-[-10rem] flex h-screen w-dvw items-center justify-center border-primary-color bg-primary-bg bg-opacity-85">
           <div className="flex h-[80%] w-[80%] flex-col items-center justify-center">
-            <Button
-              className="my-2 bg-red-500"
+            <IoCloseSharp
               onClick={() => setShowImage(false)}
-            >
-              {' '}
-              Close
-            </Button>
+              className="my-2 h-[5rem] w-[4rem] cursor-pointer hover:text-red-500"
+            />
             <img
-              className="h-[80%] w-[80%] object-contain"
+              className="h-[80%] w-[80%] rounded-md object-contain"
               src={proofImage}
               alt="proof"
             />
