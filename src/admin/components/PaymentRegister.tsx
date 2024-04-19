@@ -108,7 +108,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
               payment_status: 'Approved',
               phone_number: 'n/a',
               reference_no: 'n/a',
-              proof_image: 'n/a',
+              proof_image: '',
               generatedReference_no: 'n/a',
             })
             .then((res) => {
