@@ -2,7 +2,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StudentTypes } from '@/types/types';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import User from '@/assets/user.png';
 
@@ -10,32 +10,53 @@ type ChangeEvent =
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>;
 
-export default function AddStudentsModal({
+export default function UpdateStudentsModal({
   setShowAddStudents,
+  studentId,
 }: {
   setShowAddStudents: (value: boolean) => void;
+  studentId: number;
 }) {
-  const [students, setStudents] = useState<StudentTypes[]>([]);
+  const [students, setStudents] = useState({} as StudentTypes);
 
   const [image, setImage] = useState<string | null>(null);
+  const [newImage, setNewImage] = useState<string | null>(null);
+
+  const fetchStudent = async () => {
+    await axios
+      .get(`${import.meta.env.VITE_MINI_HACKATHON}/student.php`, {
+        params: { student_id: studentId },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setStudents(res.data[0]);
+
+        setImage(res.data[0].student_profile);
+      });
+  };
+
+  useEffect(() => {
+    fetchStudent();
+  }, []);
 
   const handleChange = (e: ChangeEvent) => {
     const value = e.target.value;
     const name = e.target.name;
     setStudents((values) => ({ ...values, [name]: value }));
   };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     console.log(image);
 
     axios
-      .post(`${import.meta.env.VITE_MINI_HACKATHON}/student.php`, {
+      .put(`${import.meta.env.VITE_MINI_HACKATHON}/student.php`, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         ...students,
-        student_profile: image,
+        student_profile: newImage?.length ? newImage : image,
       })
       .then((res) => {
         console.log(res.data);
@@ -54,15 +75,13 @@ export default function AddStudentsModal({
     data.onloadend = () => {
       const base64 = data.result;
       if (base64) {
-        setImage(base64.toString());
-
-        // console.log(base64.toString());
+        setNewImage(base64.toString());
       }
     };
   };
 
   return (
-    <div className="absolute top-0 flex h-fit w-full flex-col items-center justify-center bg-primary-bg p-4 text-center">
+    <div className="absolute top-0 z-50 flex h-full w-full flex-col items-center  bg-primary-bg p-4 text-center">
       <div className="w-[60rem] ">
         <div className="mt-[5rem] flex w-full items-center justify-between gap-[4rem] rounded-md bg-white p-4">
           <div className="mb-2 mt-[2rem] flex w-[40rem] flex-col">
@@ -88,6 +107,7 @@ export default function AddStudentsModal({
                   name="student_name"
                   className="mb-2"
                   onChange={handleChange}
+                  defaultValue={students.student_name}
                 />
               </div>
             </div>
@@ -99,6 +119,7 @@ export default function AddStudentsModal({
                   name="student_course"
                   className="mb-2"
                   onChange={handleChange}
+                  defaultValue={students.student_course}
                 />
               </div>
             </div>
@@ -110,6 +131,7 @@ export default function AddStudentsModal({
                   name="year_block"
                   className="mb-2"
                   onChange={handleChange}
+                  defaultValue={students.year_block}
                 />
               </div>
             </div>
@@ -121,6 +143,7 @@ export default function AddStudentsModal({
                   name="student_id_code"
                   className="mb-2"
                   onChange={handleChange}
+                  defaultValue={students.student_id_code}
                 />
               </div>
             </div>
@@ -130,7 +153,7 @@ export default function AddStudentsModal({
                 className="block h-[3.5rem] w-[10rem] bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
                 type="submit"
               >
-                Register
+                Update
               </Button>
 
               <Button

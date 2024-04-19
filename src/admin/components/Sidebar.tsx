@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ExitIcon } from '@radix-ui/react-icons';
+import CICT from '@/assets/cict.jpg';
 
 import Dashboard from '../pages/Dashboard';
 import Events from '../pages/Events';
@@ -43,12 +44,12 @@ export default function Sidebar() {
         <header className="flex h-[8rem] items-center">
           {isMouseOver ? (
             <Avatar className="mt-[5rem] h-[10em] w-[10rem] cursor-pointer">
-              <AvatarImage src={Logo} />
+              <AvatarImage src={CICT} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           ) : (
             <Avatar className="h-[4rem] w-[4rem]">
-              <AvatarImage src={Logo} />
+              <AvatarImage src={CICT} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           )}

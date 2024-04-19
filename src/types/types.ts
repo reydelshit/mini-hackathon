@@ -4,6 +4,8 @@ export type StudentTypes = {
   student_id_code: string;
   student_profile: string;
   created_at: string;
+  year_block: string;
+  student_course: string;
 };
 
 export type EventTypes = {
@@ -14,6 +16,7 @@ export type EventTypes = {
   created_at: string;
   description: string;
   status: string;
+  record_count: number;
 };
 
 export type EventRecordsType = {

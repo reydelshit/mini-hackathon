@@ -22,10 +22,11 @@ import {
 } from '@/components/ui/table';
 
 import { useToast } from '@/components/ui/use-toast';
-import { EventRecordsType } from '@/types/types';
+import { EventRecordsType, StudentTypes } from '@/types/types';
 import { Label } from '@radix-ui/react-label';
 import { Scanner } from '@yudiel/react-qr-scanner';
 import moment from 'moment';
+import { IoCloseSharp } from 'react-icons/io5';
 
 const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
   const [events, setEvents] = useState<EventRecordsType[]>([]);
@@ -45,6 +46,9 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
   const [paymayaImage, setPaymayaImage] = useState<string | null>(null);
   const [showImage, setShowImage] = useState(false);
   const [proofImage, setProofImage] = useState('');
+  const [studentProfile, setStudentProfile] = useState(
+    {} as StudentTypes | null,
+  );
 
   const copyLink = `http://192.168.0.104:5173/pay/${btoa(eventTitle.toString())}/${btoa('event-id=' + id ?? ''.toString())}`;
 
@@ -211,26 +215,54 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
     setShowImage(true);
   };
 
+  useEffect(() => {
+    // Check if studentCode is not empty
+    if (studentCode) {
+      axios
+        .get(`${import.meta.env.VITE_MINI_HACKATHON}/student.php`, {
+          params: { student_id_code: studentCode },
+        })
+        .then((res) => {
+          // Check if data is available
+          if (res.data.length > 0) {
+            console.log(res.data[0]);
+            setStudentProfile(res.data[0]);
+          } else {
+            // Handle case when no data is found
+            setStudentProfile(null);
+          }
+        })
+        .catch((error) => {
+          console.error('Error fetching student profile:', error);
+          // Handle error, e.g., set studentProfile to null
+          setStudentProfile(null);
+        });
+    } else {
+      // Handle case when studentCode is empty
+      setStudentProfile(null);
+    }
+  }, [studentCode]);
+
   return (
     <div>
       <div className="flex w-full flex-col-reverse gap-10 md:flex-row">
         <div className="mt-[1rem] w-full rounded-lg bg-white p-2">
-          <div className="my-2 flex w-full items-center justify-between">
+          <div className="my-2 mb-[2rem] flex w-full items-center justify-between">
             <Input
               onChange={(e) => setSearchEventName(e.target.value)}
-              className="w-[20rem]"
+              className="h-[3.5rem] w-[20rem]"
               placeholder="search Student.."
             />
 
-            <div className="flex gap-4">
-              <Button>
+            <div className="flex h-[3.5rem] gap-4">
+              <Button className="block h-[3.5rem] w-fit bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color">
                 <Link to={`/admin/events/${id}/check`}>
                   Check Online Payments
                 </Link>
               </Button>
 
               <Select value={eventStatus} onValueChange={handleStatus}>
-                <SelectTrigger className="w-[15rem]">
+                <SelectTrigger className="h-full w-[15rem]">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -349,18 +381,24 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
           </Table>
         </div>
 
-        <div className="flex w-full flex-col items-center gap-4 bg-primary-bg md:w-[30%]">
-          <Button onClick={handleShowRegister} className="w-full">
+        <div className="flex w-full flex-col items-center gap-4 bg-primary-bg md:w-[20%]">
+          <Button
+            className="block h-[3.5rem] w-full bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+            onClick={handleShowRegister}
+          >
             Register Student
           </Button>
 
           <Button
+            className="block h-[3.5rem] w-full bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
             onClick={() => setGeneratePaymentLink(true)}
-            className="w-full"
           >
             Generate Payment Link
           </Button>
-          <Button onClick={handleShowWireTransfer} className="w-full">
+          <Button
+            className="block h-[3.5rem] w-full bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+            onClick={handleShowWireTransfer}
+          >
             Online Transfer (Gcash, Payment)
           </Button>
         </div>
@@ -368,16 +406,14 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
       {showRegister && (
         <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90 md:w-full">
-          <div className="mt-[-10rem]flex relative flex h-[85%] w-full flex-col items-center justify-center rounded-lg border-2 bg-white md:h-[60%] md:w-[50%]">
-            <Button
+          <div className="relative mt-[-15rem] flex h-[85%] w-full flex-col items-center justify-center rounded-lg border-2 bg-white md:h-[60%] md:w-[50%]">
+            <IoCloseSharp
               onClick={() => setShowRegister(false)}
-              className="absolute right-5 top-5"
-            >
-              Close
-            </Button>
+              className="absolute right-5 top-5 h-[5rem] w-[4rem] cursor-pointer hover:text-red-500"
+            />
 
-            <div className="flex h-fit w-full flex-col items-center justify-around gap-2 md:flex-row">
-              <div className="flex h-[15rem] w-full md:w-[40%]">
+            <div className="flex h-fit w-full flex-col items-center justify-around gap-2 p-4 md:flex-row">
+              <div className="flex h-[15rem] w-full md:w-[50%]">
                 <Scanner
                   onResult={(text, result) =>
                     setStudentCode(text.replace(/[^0-9-]/g, ''))
@@ -388,14 +424,38 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
               {studentCode.length > 0 && studentCode !== '0' && (
                 <div className="flex h-full w-full flex-col items-center justify-center p-2">
-                  <div className="my-2 flex w-[80%] flex-col justify-center">
+                  <div className="my-2 flex w-[60%] flex-col justify-center">
                     <h1 className="my-2 text-center text-lg font-semibold">
                       Student Details
                     </h1>
                     <form onSubmit={handleSubmitRegister}>
-                      <h1 className="h-[2rem] rounded-md bg-primary-color p-2 text-center text-white">
+                      <h1 className="my-2 rounded-md bg-primary-color p-4 text-center font-bold text-white">
                         {studentCode.replace(/[^0-9-]/g, '')}
                       </h1>
+
+                      {studentProfile && studentProfile.student_name && (
+                        <>
+                          <div className="flex w-full items-center justify-center">
+                            <img
+                              className="w-[5rem] self-center rounded-full object-cover"
+                              src={studentProfile.student_profile ?? ''}
+                              alt={studentProfile.student_name ?? ''}
+                            />
+                          </div>
+
+                          <Label className="my-2">Student Name</Label>
+                          <h1 className="ml-2 text-center text-xl font-bold">
+                            {studentProfile.student_name}
+                          </h1>
+
+                          <Label className="my-2">Course Block / Year</Label>
+                          <h1 className="ml-2 text-center text-xl font-bold">
+                            {studentProfile.student_course ?? ''}{' '}
+                            {studentProfile.year_block ?? ''}
+                          </h1>
+                        </>
+                      )}
+
                       <Label className="my-2">Amount</Label>
                       <Input
                         type="number"
@@ -406,7 +466,10 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
                         placeholder="Enter payment amount"
                       />
 
-                      <Button type="submit" className="w-full">
+                      <Button
+                        type="submit"
+                        className="mt-[2rem] block h-[3.5rem] w-full bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+                      >
                         Submit
                       </Button>
                     </form>

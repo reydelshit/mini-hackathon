@@ -15,6 +15,8 @@ import axios from 'axios';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import PageHeader from '../utils/PageHeaders';
+import { IoCloseSharp } from 'react-icons/io5';
 
 const Dashboard = () => {
   const [showAddEvent, setShowAddEvent] = useState(false);
@@ -59,6 +61,9 @@ const Dashboard = () => {
             title: 'Sucessfully added an event',
             description: moment().format('LLL'),
           });
+
+          fetchEvents();
+          setShowAddEvent(false);
         }
       });
   };
@@ -79,25 +84,22 @@ const Dashboard = () => {
   return (
     <div className="relative ml-[6rem] mt-[2rem] h-full">
       <div className="flex w-full justify-between pr-4">
-        <h1 className="my-4 text-2xl font-bold">Dashboard</h1>
+        <PageHeader style="" title="Events" />
 
         <div className="flex flex-col gap-2">
-          <div className="w-[8rem] rounded-md bg-yellow-600 p-2 text-center">
-            {' '}
-            Ongoing{' '}
+          <div className="w-[8rem] rounded-md bg-yellow-600 p-2 text-center text-white">
+            Ongoing
           </div>
-          <div className="w-[8rem] rounded-md bg-green-600 p-2 text-center">
-            {' '}
-            Completed{' '}
+          <div className="w-[8rem] rounded-md bg-green-600 p-2 text-center text-white">
+            Completed
           </div>
-          <div className="w-[8rem] rounded-md bg-red-600  p-2 text-center">
-            {' '}
-            Cancelled{' '}
+          <div className="w-[8rem] rounded-md bg-red-600  p-2 text-center text-white">
+            Cancelled
           </div>
         </div>
       </div>
 
-      <div className="grid w-full grid-cols-4">
+      <div className="grid w-full grid-cols-5">
         {events.map((event, index) => (
           <div
             key={index}
@@ -131,10 +133,12 @@ const Dashboard = () => {
                 <span className="text-sm">
                   {moment(event.event_deadline).format('LLL')}
                 </span>
-                {event.status}
-                <div className="flex flex-col">
-                  {/* <Label>Subs</Label> */}
-                  {/* <span className="text-lg font-semibold">100</span> */}
+
+                <div className="flex items-end">
+                  <span className="flex items-center text-5xl font-semibold">
+                    {event.record_count}
+                    <Label className="text-xs">Entries</Label>
+                  </span>
                 </div>
               </div>
             </Link>
@@ -152,12 +156,10 @@ const Dashboard = () => {
       {showAddEvent && (
         <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
           <div className="relative mt-[-10rem] flex h-[50%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
-            <Button
+            <IoCloseSharp
               onClick={() => setShowAddEvent(false)}
-              className="absolute right-5 top-5"
-            >
-              Close
-            </Button>
+              className="absolute right-5 top-5 h-[5rem] w-[4rem] cursor-pointer hover:text-red-500"
+            />
 
             <h1 className="my-2 text-lg font-semibold">SET AN EVENT</h1>
             <form
@@ -206,11 +208,14 @@ const Dashboard = () => {
                   onChange={handleChange}
                   className="w-full"
                   type="datetime-local"
-                  name="event_date"
+                  name="event_deadline"
                 />
               </div>
 
-              <Button className="my-[2rem]" type="submit">
+              <Button
+                className="mt-[2rem] block h-[3.5rem] w-[15rem] bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+                type="submit"
+              >
                 Submit
               </Button>
             </form>

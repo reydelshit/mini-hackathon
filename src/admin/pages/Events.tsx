@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PaymentRegister from '../components/PaymentRegister';
 import { toast } from '@/components/ui/use-toast';
+import PageHeader from '../utils/PageHeaders';
 
 const Events = () => {
   const [eventType, setEventType] = useState<string>('');
@@ -66,7 +67,7 @@ const Events = () => {
     <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
       <div className="flex w-[75%] items-center justify-between">
         <div>
-          <h1 className="my-4 text-2xl font-bold">{event.event_title}</h1>
+          <PageHeader style="text-[3rem]" title={String(event.event_title)} />
           <h4 className="my-4 text-xl font-bold">{event.description}</h4>
 
           <p>Deadline: {moment(event.event_deadline).format('LLL')}</p>

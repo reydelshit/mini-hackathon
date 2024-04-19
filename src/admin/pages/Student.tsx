@@ -29,12 +29,16 @@ import { FiEdit3 } from 'react-icons/fi';
 import { StudentTypes } from '@/types/types';
 import AddStudentsModal from '../components/students/AddStudents';
 import QRCode from 'react-qr-code';
+import PageHeader from '../utils/PageHeaders';
+import UpdateStudentsModal from '../components/students/UpdateStudent';
 
 const Students = () => {
   const [students, setStudents] = useState<StudentTypes[]>([]);
 
   const [showAddStudents, setShowAddStudents] = useState(false);
   const [searchStudents, setSearchStudents] = useState('');
+  const [studentId, setStudentId] = useState(0);
+  const [showUpdate, setShowUpdate] = useState(false);
 
   const handleDelete = (id: number) => {
     axios
@@ -61,9 +65,22 @@ const Students = () => {
     fetchStudents();
   }, []);
 
+  const handleUpdateStudent = (id: number) => {
+    console.log(id);
+    setStudentId(id);
+    setShowUpdate(true);
+  };
+
   return (
     <div className="relative ml-[6rem] mt-[2rem] h-full">
-      <h1 className="my-4 text-2xl font-bold">Students</h1>
+      <PageHeader style="" title="Students" />
+
+      {showUpdate && (
+        <UpdateStudentsModal
+          setShowAddStudents={setShowUpdate}
+          studentId={studentId}
+        />
+      )}
 
       {showAddStudents ? (
         <AddStudentsModal setShowAddStudents={setShowAddStudents} />
@@ -78,7 +95,7 @@ const Students = () => {
 
             <Button
               onClick={() => setShowAddStudents(!showAddStudents)}
-              className="self-end"
+              className="block h-[3.5rem] w-[10rem] self-end bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
             >
               {showAddStudents ? 'Close' : 'Add Student'}
             </Button>
@@ -93,6 +110,11 @@ const Students = () => {
                   Student Code
                 </TableHead>
                 <TableHead className="font-bold text-black">Name</TableHead>
+                <TableHead className="font-bold text-black">Course</TableHead>
+                <TableHead className="font-bold text-black">
+                  Year and Block
+                </TableHead>
+
                 <TableHead className="w-[15rem] font-bold text-black">
                   QR
                 </TableHead>
@@ -119,6 +141,9 @@ const Students = () => {
 
                       <TableCell> {stud.student_id_code} </TableCell>
                       <TableCell> {stud.student_name} </TableCell>
+                      <TableCell> {stud.student_course} </TableCell>
+                      <TableCell> {stud.year_block} </TableCell>
+
                       <TableCell>
                         <QRCode
                           size={256}
@@ -136,7 +161,7 @@ const Students = () => {
                         <span className="flex gap-2">
                           <AlertDialog>
                             <AlertDialogTrigger className="cursor-pointer">
-                              <RiDeleteBin5Line className="h-[1.5rem] w-[2rem] text-[#5d383a]" />
+                              <RiDeleteBin5Line className="h-[1.5rem] w-[2rem] " />
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader>
@@ -159,14 +184,11 @@ const Students = () => {
                               </AlertDialogFooter>
                             </AlertDialogContent>
                           </AlertDialog>
-                          <Link to={`/admin/student/update/${stud.student_id}`}>
-                            {' '}
-                            <FiEdit3 className="h-[1.5rem] w-[2rem] text-[#5d383a]" />
-                          </Link>
-                          {/* <Link to={`/shop/${stud.Student_id}`}>
-                          {' '}
-                          <AiOutlineEye className="h-[1.5rem] w-[2rem] text-[#5d383a]" />
-                        </Link> */}
+
+                          <FiEdit3
+                            onClick={() => handleUpdateStudent(stud.student_id)}
+                            className="h-[1.5rem] w-[2rem] cursor-pointer"
+                          />
                         </span>
                       </TableCell>
                     </TableRow>
