@@ -39,7 +39,7 @@ export default function Sidebar() {
         onMouseOver={() => handleMouseOver()}
         onMouseLeave={() => handleMouseLeave()}
         style={{ width: `${width}rem` }}
-        className="duration-350 fixed left-0 top-0 z-10 flex h-screen w-[25rem] flex-col items-center justify-center border-r-2 bg-white p-2 transition-all ease-in-out"
+        className="duration-350 fixed left-0 top-0 z-10  flex h-screen flex-col items-center justify-center border-r-2 bg-white p-2 transition-all ease-in-out md:w-[25rem]"
       >
         <header className="flex h-[8rem] items-center">
           {isMouseOver ? (

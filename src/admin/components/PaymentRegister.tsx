@@ -244,8 +244,8 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
   }, [studentCode]);
 
   return (
-    <div>
-      <div className="flex w-full flex-col-reverse gap-10 md:flex-row">
+    <>
+      <div className="flex flex-col-reverse gap-10 p-2 md:w-[100%] md:flex-row md:p-0">
         <div className="mt-[1rem] w-full rounded-lg bg-white p-2">
           <div className="my-2 mb-[2rem] flex w-full items-center justify-between">
             <Input
@@ -405,15 +405,15 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
       </div>
 
       {showRegister && (
-        <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90 md:w-full">
-          <div className="relative mt-[-15rem] flex h-[85%] w-full flex-col items-center justify-center rounded-lg border-2 bg-white md:h-[60%] md:w-[50%]">
+        <div className="absolute top-0 flex h-[100%] w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90 md:h-screen md:w-full">
+          <div className="relative z-40 flex h-fit w-full flex-col items-center justify-center rounded-lg border-2 border-primary-color bg-white md:mt-[-15rem] md:h-[60%] md:w-[50%]">
             <IoCloseSharp
               onClick={() => setShowRegister(false)}
-              className="absolute right-5 top-5 h-[5rem] w-[4rem] cursor-pointer hover:text-red-500"
+              className="absolute right-5 top-5 h-[2rem] w-[2rem] cursor-pointer hover:text-red-500 md:h-[5rem] md:w-[4rem]"
             />
 
-            <div className="flex h-fit w-full flex-col items-center justify-around gap-2 p-4 md:flex-row">
-              <div className="flex h-[15rem] w-full md:w-[50%]">
+            <div className="mt-[5rem] flex h-fit w-full flex-col items-center justify-around gap-2 rounded-lg p-2 md:mt-[-2rem] md:flex-row">
+              <div className="flex h-full w-full md:h-[15rem] md:w-[50%]">
                 <Scanner
                   onResult={(text, result) =>
                     setStudentCode(text.replace(/[^0-9-]/g, ''))
@@ -423,9 +423,9 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
               </div>
 
               {studentCode.length > 0 && studentCode !== '0' && (
-                <div className="flex h-full w-full flex-col items-center justify-center p-2">
-                  <div className="my-2 flex w-[60%] flex-col justify-center">
-                    <h1 className="my-2 text-center text-lg font-semibold">
+                <div className="mt-[1rem] flex h-full w-full flex-col items-center justify-center p-2">
+                  <div className="flex w-full flex-col justify-center md:w-[60%]">
+                    <h1 className="text-center text-lg font-semibold">
                       Student Details
                     </h1>
                     <form onSubmit={handleSubmitRegister}>
@@ -483,23 +483,24 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
       {generatePaymentLink && (
         <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
-          <div className="relative mt-[-10rem] flex h-[40%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white p-4">
-            <Button
+          <div className="relative mt-[-10rem] flex h-[40%] w-[50%] flex-col items-center justify-center rounded-lg border-2 border-primary-color bg-white p-4">
+            <IoCloseSharp
               onClick={() => setGeneratePaymentLink(false)}
-              className="absolute right-5 top-5"
-            >
-              Close
-            </Button>
+              className="absolute right-5 top-5 h-[2rem] w-[2rem] cursor-pointer hover:text-red-500 md:h-[5rem] md:w-[4rem]"
+            />
 
             <h1 className="my-4 text-[1.5rem] font-semibold">
               Share this payment link for online transfer
             </h1>
 
             <div className="flex w-full flex-col items-center text-center">
-              <span className="w-fit rounded-lg border-2 bg-primary-color p-4 text-white">
+              <span className="w-fit rounded-lg border-4 border-primary-color bg-primary-bg p-4 text-primary-color">
                 {copyLink}
               </span>
-              <Button onClick={handleCopy} className="my-4 h-[3rem] w-[9rem]">
+              <Button
+                onClick={handleCopy}
+                className="my-4 mt-[2rem] block h-[3.5rem] w-[9rem] bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
+              >
                 Copy Link
               </Button>
             </div>
@@ -509,13 +510,11 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
       {showUploadWireTransfer && (
         <div className="absolute top-0 flex h-full w-full flex-col items-center justify-center bg-primary-bg bg-opacity-90">
-          <div className="relative mt-[-10rem] flex h-[50%] w-[50%] flex-col items-center justify-center rounded-lg border-2 bg-white">
-            <Button
+          <div className="relative mt-[-10rem] flex h-[60%] w-[50%] flex-col items-center justify-center rounded-lg border-2 border-primary-color bg-white p-4">
+            <IoCloseSharp
               onClick={() => setShowUploadWireTransfer(false)}
-              className="absolute right-5 top-5"
-            >
-              Close
-            </Button>
+              className="absolute right-5 top-5 h-[2rem] w-[2rem] cursor-pointer hover:text-red-500 md:h-[5rem] md:w-[4rem]"
+            />
             <h1 className="my-4 text-[1.5rem] font-semibold">
               QR Code for online transfer
             </h1>
@@ -536,7 +535,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
                 <Button
                   onClick={() => handleUploadQRCode('gcash')}
-                  className="w-full"
+                  className="mt-[2rem] block h-[3.5rem] w-full bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
                 >
                   Submit
                 </Button>
@@ -565,7 +564,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
 
                 <Button
                   onClick={() => handleUploadQRCode('paymaya')}
-                  className="w-full"
+                  className="mt-[2rem] block h-[3.5rem] w-full bg-primary-color text-white hover:border-4 hover:border-primary-color hover:bg-white hover:text-primary-color"
                 >
                   Submit
                 </Button>
@@ -599,7 +598,7 @@ const PaymentRegister = ({ eventTitle }: { eventTitle: string }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

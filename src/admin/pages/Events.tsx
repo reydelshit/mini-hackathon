@@ -64,8 +64,8 @@ const Events = () => {
   };
 
   return (
-    <div className="relative ml-[6rem] mr-[1.5rem] mt-[2rem] h-full">
-      <div className="flex w-[75%] items-center justify-between">
+    <div className="relative ml-[6rem] mt-[2rem] h-full bg-primary-bg md:mr-[1.5rem]">
+      <div className="flex w-[81%] items-center justify-between md:flex-row">
         <div>
           <PageHeader style="text-[3rem]" title={String(event.event_title)} />
           <h4 className="my-4 text-xl font-bold">{event.description}</h4>
@@ -89,16 +89,18 @@ const Events = () => {
         </div>
       </div>
 
-      {eventType === 'registration-payment' ||
-      eventType === 'registration' ||
-      eventType === 'payment' ? (
-        <PaymentRegister eventTitle={event.event_title} />
-      ) : (
-        <div>
-          Event type other than registration-payment or registration is not
-          available {eventType}
-        </div>
-      )}
+      <div>
+        {eventType === 'registration-payment' ||
+        eventType === 'registration' ||
+        eventType === 'payment' ? (
+          <PaymentRegister eventTitle={event.event_title} />
+        ) : (
+          <div>
+            Event type other than registration-payment or registration is not
+            available {eventType}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
